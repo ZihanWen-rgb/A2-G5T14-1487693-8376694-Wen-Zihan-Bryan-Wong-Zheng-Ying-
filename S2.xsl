@@ -9,22 +9,34 @@
 <head>
     <title>Weather Forecast</title>
     <style>
-        table {
-            border-collapse: collapse;
-            margin: auto;
+        h1 { 
+            style="text-align:left; 
+            margin-left:20px;
         }
 
-        th, td {
+        table {
+            style="text-align:left; 
+            margin-left:20px;
+            border-collapse: collapse;
+        }
+
+        th {
+            border: 1px solid black;
+            width: 100px;
+            height: 40px;
+            text-align: center;
+            vertical-align: middle;
+            background-color: yellow;
+            font-weight: bold;
+        }
+
+        td {
             border: 1px solid black;
             width: 100px;
             height: 100px;
             text-align: center;
             vertical-align: middle;
-        }
-
-        th {
-            background-color: yellow;
-            font-weight: bold;
+            padding:5px;
         }
 
         .dateCell {
@@ -41,12 +53,12 @@
 
 <body>
 
-<h2 style="text-align:center;">
+<h1>
     <xsl:value-of select="@queryLocation"/>
     [
     <xsl:value-of select="@queryTime"/>
     ]
-</h2>
+</h1>
 
 <table>
     <tr>
@@ -67,7 +79,20 @@
             <td class="dateCell">
                 <xsl:value-of select="date"/>
                 <xsl:text> </xsl:text>
-                <xsl:value-of select="month"/>
+                <xsl:choose>
+                    <xsl:when test="month = 1">Jan</xsl:when>
+                    <xsl:when test="month = 2">Feb</xsl:when>
+                    <xsl:when test="month = 3">Mar</xsl:when>
+                    <xsl:when test="month = 4">Apr</xsl:when>
+                    <xsl:when test="month = 5">May</xsl:when>
+                    <xsl:when test="month = 6">Jun</xsl:when>
+                    <xsl:when test="month = 7">Jul</xsl:when>
+                    <xsl:when test="month = 8">Aug</xsl:when>
+                    <xsl:when test="month = 9">Sep</xsl:when>
+                    <xsl:when test="month = 10">Oct</xsl:when>
+                    <xsl:when test="month = 11">Nov</xsl:when>
+                    <xsl:when test="month = 12">Dec</xsl:when>
+                </xsl:choose>
             </td>
 
             <td>
@@ -131,8 +156,9 @@
     <div>
         <img>
             <xsl:attribute name="src">
+                <xsl:text>images/</xsl:text>
                 <xsl:value-of select="overallCode"/>
-                <xsl:text>.png</xsl:text>
+                <xsl:text>.jpeg</xsl:text>
             </xsl:attribute>
         </img>
     </div>
