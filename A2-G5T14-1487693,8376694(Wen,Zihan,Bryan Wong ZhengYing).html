@@ -3,10 +3,11 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>A1-G5T14-1487693,8376694(Wen,Zihan,Bryan Wong ZhengYing)</title>
+  <title>A2-G5T14-1487693,8376694(Wen,Zihan,Bryan Wong ZhengYing)</title>
   <style>
     body {
       min-height: 2000px;
+      font-family: Arial, sans-serif;
     }
 
     #part1table {
@@ -16,7 +17,7 @@
       margin: 20px;
     }
 
-    td {
+    #part1table td {
       border: 1px solid #666;
       padding: 10px;
       vertical-align: middle;
@@ -58,10 +59,6 @@
       margin-left: 20px;
     }
 
-    h3 {
-      margin-bottom: 0;
-    }
-
     p {
       margin: 0;
     }
@@ -69,7 +66,6 @@
     #part4table {
       width: 650px;
       border-collapse: collapse;
-      /* 合并边框，使其变成单线 */
       font-family: Arial, sans-serif;
       margin: 20px;
     }
@@ -81,6 +77,57 @@
     #findandreplace {
       margin-top: 10px;
     }
+
+    #part2table {
+      border-collapse: collapse;
+      width: 600px;
+      border: 2px solid black;
+      margin: 20px;
+      font-family: sans-serif;
+    }
+
+    #part2table td {
+      border: 1px solid black;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .game-header {
+      background-color: #f5cba7;
+      font-weight: bold;
+      font-size: 24px;
+    }
+
+    .name-row {
+      background-color: #f5cba7;
+      text-align: left;
+    }
+
+    .blue-cell {
+      background-color: #d6eaf8;
+      font-weight: bold;
+    }
+
+    .score-cell {
+      background-color: #fef9e7;
+      font-weight: bold;
+    }
+
+    .btn-row {
+      background-color: #abebc6;
+    }
+
+    .char-box {
+      font-size: 30px;
+      font-weight: bold;
+      cursor: pointer;
+      height: 60px;
+      width: 33%;
+    }
+
+    #score-val {
+      color: red;
+    }
   </style>
 </head>
 
@@ -88,27 +135,113 @@
   <h2>Part 1</h2>
   <table id="part1table">
     <tr class="header-row">
-      <!-- row 1 -->
       <td colspan="3">CSIT128: Assignment 2</td>
       <td>Group G5T14</td>
     </tr>
 
-    <!-- row 2 -->
     <tr>
       <td rowspan="2" class="left-align">Student Number / Name / Email</td>
-
       <td>1487693</td>
       <td>Wen,zihan</td>
       <td>zw927@uowmail.edu.au</td>
     </tr>
 
-    <!-- row 3 -->
     <tr>
       <td>8376694</td>
       <td>Bryan Wong Zheng Ying</td>
       <td>bzyw329@uowmail.edu.au</td>
     </tr>
   </table>
+
+  <h2>Part 2: Game</h2>
+  <table id="part2table">
+    <tr>
+      <td colspan="3" class="game-header">Part 2: Game</td>
+    </tr>
+    <tr>
+      <td colspan="3" class="name-row">
+        Name: <input type="text" id="playerName" oninput="checkName()">
+      </td>
+    </tr>
+    <tr>
+      <td class="blue-cell">Your chosen character:</td>
+      <td class="blue-cell">
+        <select id="targetChar" disabled>
+          <option>T</option>
+          <option>R</option>
+          <option>&amp;</option>
+          <option>?</option>
+          <option>8</option>
+          <option>2</option>
+        </select>
+      </td>
+      <td class="score-cell">Current Score: <span id="score-val">0</span></td>
+    </tr>
+    <tr>
+      <td colspan="3" class="btn-row">
+        <button id="startBtn" onclick="startGame()" disabled>Start Game</button>
+        <button id="stopBtn" onclick="stopGame()" disabled>Stop Game</button>
+      </td>
+    </tr>
+    <tr>
+      <td id="c1" class="char-box" style="color: #b7950b" onclick="hit(this)"></td>
+      <td id="c2" class="char-box" style="color: #1b4f72" onclick="hit(this)"></td>
+      <td id="c3" class="char-box" style="color: #1e8449" onclick="hit(this)"></td>
+    </tr>
+    <tr>
+      <td>Player (Score)</td>
+      <td colspan="2" style="text-align: left;">
+        <ul id="history"></ul>
+      </td>
+    </tr>
+  </table>
+
+  <script>
+    let score = 0;
+    let timer = null;
+    const chars = ["T", "R", "&", "?", "8", "2", "#"];
+
+    function checkName() {
+      let nameEmpty = document.getElementById('playerName').value.trim() === "";
+      document.getElementById('startBtn').disabled = nameEmpty;
+      document.getElementById('targetChar').disabled = nameEmpty;
+    }
+
+    function startGame() {
+      score = 0;
+      document.getElementById('score-val').innerText = "0";
+      document.getElementById('startBtn').disabled = true;
+      document.getElementById('stopBtn').disabled = false;
+      document.getElementById('targetChar').disabled = true;
+
+      run();
+      timer = setInterval(run, 2000);
+    }
+
+    function run() {
+      let shuffle = [...chars].sort(() => 0.5 - Math.random());
+      document.getElementById('c1').innerText = shuffle[0];
+      document.getElementById('c2').innerText = shuffle[1];
+      document.getElementById('c3').innerText = shuffle[2];
+    }
+
+    function hit(el) {
+      if (!timer) return;
+      let target = document.getElementById('targetChar').value;
+      score += (el.innerText === target) ? 3 : -2;
+      document.getElementById('score-val').innerText = score;
+    }
+
+    function stopGame() {
+      clearInterval(timer);
+      timer = null;
+      let name = document.getElementById('playerName').value;
+      document.getElementById('history').innerHTML += `<li>${name} (${score})</li>`;
+      document.getElementById('startBtn').disabled = false;
+      document.getElementById('stopBtn').disabled = true;
+      document.getElementById('targetChar').disabled = false;
+    }
+  </script>
 </body>
 
 </html>
